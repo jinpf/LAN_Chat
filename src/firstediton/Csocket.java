@@ -32,15 +32,15 @@ public class Csocket {
 									try {
 										
 										str = in.readUTF();
-										MainFrame.InfoT.append("CÊÕµ½:"+str+"\n");
+										MainFrame.InfoT.append("Cæ”¶åˆ°:"+str+"\n");
 										
 									} catch (IOException e) {
 										e.printStackTrace();
 										if(e.getMessage()==null){
-											MainFrame.InfoT.append("C:¶Ô·½¶Ï¿ªÁ¬½Ó£¡\n");
+											MainFrame.InfoT.append("C:å¯¹æ–¹æ–­å¼€è¿æ¥\n");
 											
 										}else{
-											MainFrame.InfoT.append("C:½ÓÊÕĞÅÏ¢Ê§°Ü£¡\n");
+											MainFrame.InfoT.append("C:æ¥æ”¶æ¶ˆæ¯å¤±è´¥\n");
 											MainFrame.InfoT.append(e.getMessage()+"\n");
 										}
 										flag=false;
@@ -62,7 +62,7 @@ public class Csocket {
 			t.start();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(MainFrame.Mframe.getContentPane(),
-				       "Á¬½ÓÊ§°Ü£¡Çë¼ì²éµØÖ·", "×¢Òâ£¡", JOptionPane.WARNING_MESSAGE);
+				       "è¿æ¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥è¿æ¥åœ°å€ï¼", "è­¦å‘Šï¼", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -75,10 +75,10 @@ public class Csocket {
 		try {
 			DataOutputStream out=new DataOutputStream(client.getOutputStream());
 			out.writeUTF(message);
-			MainFrame.InfoT.append("C·¢ËÍ:"+message+"\n");
+			MainFrame.InfoT.append("Cå‘é€:"+message+"\n");
 //			out.close();
 		} catch (IOException e) {
-			MainFrame.InfoT.append("C·¢ËÍÊ§°Ü£¡\n");
+			MainFrame.InfoT.append("Cå‘é€å¤±è´¥\n");
 			MainFrame.InfoT.append(e.getMessage()+"\n");
 		}
 	}

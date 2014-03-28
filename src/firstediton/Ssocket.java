@@ -14,7 +14,7 @@ public class Ssocket {
 	public Ssocket(int port){
 		try {
 			server=new ServerSocket(port);
-			MainFrame.InfoT.append("¿ªÊ¼¼àÌı\n");
+			MainFrame.InfoT.append("å¼€å§‹ç›‘å¬\n");
 			
 			t=new Thread(
 					new Runnable(){
@@ -30,15 +30,15 @@ public class Ssocket {
 									try {
 										
 										str = in.readUTF();
-										MainFrame.InfoT.append("SÊÕµ½£º"+str+"\n");
+										MainFrame.InfoT.append("Sæ”¶åˆ°:"+str+"\n");
 										
 									} catch (IOException e) {
 										e.printStackTrace();
 										if(e.getMessage()==null){
-											MainFrame.InfoT.append("S:¶Ô·½¶Ï¿ªÁ¬½Ó£¡\n");
+											MainFrame.InfoT.append("S:å¯¹æ–¹æ–­å¼€è¿æ¥\n");
 											
 										}else{
-											MainFrame.InfoT.append("S:½ÓÊÕĞÅÏ¢Ê§°Ü£¡\n");
+											MainFrame.InfoT.append("S:æ¥æ”¶æ¶ˆæ¯å¤±è´¥\n");
 											MainFrame.InfoT.append(e.getMessage()+"\n");
 										}
 										flag=false;
@@ -58,7 +58,7 @@ public class Ssocket {
 					);
 			t.start();
 		} catch (IOException e) {
-			MainFrame.InfoT.append("¿ªÆô¼àÌıÊ§°Ü£¡\n");
+			MainFrame.InfoT.append("ç›‘å¬å¤±è´¥\n");
 			MainFrame.InfoT.append(e.getMessage()+"\n");
 		} 
 	}
@@ -72,10 +72,10 @@ public class Ssocket {
 		try {
 			DataOutputStream out=new DataOutputStream(client.getOutputStream());
 			out.writeUTF(message);
-			MainFrame.InfoT.append("S·¢ËÍ:"+message+"\n");
+			MainFrame.InfoT.append("Så‘é€:"+message+"\n");
 //			out.close();
 		} catch (IOException e) {
-			MainFrame.InfoT.append("S·¢ËÍÊ§°Ü£¡\n");
+			MainFrame.InfoT.append("Så‘é€å¤±è´¥\n");
 			MainFrame.InfoT.append(e.getMessage()+"\n");
 		}
 		
