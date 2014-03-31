@@ -87,7 +87,7 @@ public class MainFrame {
 		//set frame at the center of the screen
 		Mframe.setLocationRelativeTo(null);
 		//set background color
-		Mframe.setBackground(Color.BLUE);
+		Mframe.getContentPane().setBackground(new Color(238,238,224));
 		Mframe.setVisible(true);
 		
 		Mframe.addWindowListener(

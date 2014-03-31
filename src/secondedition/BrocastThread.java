@@ -8,6 +8,7 @@ public class BrocastThread extends Thread{
 	
 	private DatagramSocket Listener;
 	private String Name;
+	private int Port;
 	public Boolean State;
 	
 	/**
@@ -19,9 +20,10 @@ public class BrocastThread extends Thread{
 	 * @param flag
 	 * 是广播上线还是广播下线，true代表上线，false代表下线
 	 */
-	public BrocastThread(DatagramSocket UDPsocket,String name,Boolean flag) {
+	public BrocastThread(DatagramSocket UDPsocket,String name,int port,Boolean flag) {
 		Listener=UDPsocket;
 		Name=name;
+		Port=port;
 		State=flag;
 	}
 
@@ -30,7 +32,7 @@ public class BrocastThread extends Thread{
 		if(State){//上线
 			for (int i=3000;i<3005;i++){
 				try {
-					String SendS="h"+"  "+Name;
+					String SendS="h"+"  "+Name+"  "+Port;
 					BroadCast = new DatagramPacket(SendS.getBytes("UTF-8"),SendS.length(),InetAddress.getByName("255.255.255.255"),i) ;
 					for(int k=0;k<3;k++){
 						Listener.send(BroadCast);
@@ -44,7 +46,7 @@ public class BrocastThread extends Thread{
 		}else{//下线
 			for (int j=3000;j<3005;j++){
 				try {
-					String SendS="hhh"+"  "+Name;
+					String SendS="hhh"+"  "+Name+"  "+Port;
 					BroadCast = new DatagramPacket(SendS.getBytes("UTF-8"),SendS.length(),InetAddress.getByName("255.255.255.255"),j) ;
 					for(int L=0;L<3;L++){
 						Listener.send(BroadCast);

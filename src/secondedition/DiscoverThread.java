@@ -15,6 +15,7 @@ public class DiscoverThread extends Thread{
 	private DatagramSocket Listener;
 	private Vector<String> v=new Vector<String>();
 	private String Name;
+	private int Port;
 	public Boolean State;//线程是否执行
 	
 	/**
@@ -24,9 +25,10 @@ public class DiscoverThread extends Thread{
 	 * @param name
 	 * 用户昵称
 	 */
-	public DiscoverThread(DatagramSocket UDPsocket,String name) {
+	public DiscoverThread(DatagramSocket UDPsocket,String name,int port) {
 		Listener=UDPsocket;
 		Name=name;
+		Port=port;
 	}
 	
 	public void run(){
@@ -43,24 +45,24 @@ public class DiscoverThread extends Thread{
 				String ReceiveS[]=str.split("  ");			
 			
 				if( (ReceiveS[0].length()==1) && (Receive.getPort()!=Listener.getLocalPort()) ){//收到"h"
-					String ReplyS="hh"+"  "+Name;
+					String ReplyS="hh"+"  "+Name+"  "+Port;
 					DatagramPacket Send= new DatagramPacket(ReplyS.getBytes("UTF-8"),ReplyS.length(),Receive.getAddress(),Receive.getPort()) ;
 					Listener.send(Send);
-					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+Receive.getPort();
+					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+ReceiveS[2];
 					if(!v.contains(Vstr)){
 						v.add(Vstr);
 						Collections.sort(v);
 						MainFrame.UserL.setListData(v);
 					}
 				}else if(ReceiveS[0].length()==2){//收到"hh"
-					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+Receive.getPort();
+					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+ReceiveS[2];
 					if(!v.contains(Vstr)){
 						v.add(Vstr);
 						Collections.sort(v);
 						MainFrame.UserL.setListData(v);
 					}
 				}else if(ReceiveS[0].length()==3){
-					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+Receive.getPort();
+					Vstr=ReceiveS[1]+"  "+Receive.getAddress().getHostAddress()+"  "+ReceiveS[2];
 					if(v.contains(Vstr)){
 						v.remove(Vstr);
 						MainFrame.UserL.setListData(v);

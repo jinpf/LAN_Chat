@@ -4,9 +4,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.DatagramSocket;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,6 +41,8 @@ public class MainFrame {
 	private BrocastThread Bt_On;
 	private BrocastThread Bt_Off;
 	private DatagramSocket Listener;
+	private ServerSocket MListener;
+	private Thread MListenT;
 	
 	private Boolean State=false; //true代表当前在线，false代表当前不在线
 	
@@ -74,7 +85,7 @@ public class MainFrame {
 					public void windowClosing(WindowEvent e){
 						Mframe.setVisible(false);
 						if(Listener!=null&&!Listener.isClosed()){//通知别人自己下线
-							Bt_Off=new BrocastThread(Listener,NameT.getText(),false);
+							Bt_Off=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
 							Bt_Off.start();
 							while(!Bt_Off.State);
 						}
@@ -98,13 +109,28 @@ public class MainFrame {
 								if(Listener!=null&&(!Listener.isClosed())){
 									Listener.close();
 								}
+								if(MListener!=null&&(!MListener.isClosed())){
+									try {
+										MListener.close();
+									} catch (Exception e0) {
+									}
+								}
+								for(int j=6000;j<6010;j++){
+									try{
+										MListener=new ServerSocket(j);
+										//添加接收代码
+										break;
+									}catch(Exception E){
+										
+									}
+								}
 								
 								for (int i=3000;i<3005;i++){
 									try {
 										Listener=new DatagramSocket(i);
-										Dt=new DiscoverThread(Listener,NameT.getText());
+										Dt=new DiscoverThread(Listener,NameT.getText(),MListener.getLocalPort());
 										Dt.start();
-										Bt_On=new BrocastThread(Listener,NameT.getText(),true);
+										Bt_On=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),true);
 										Bt_On.start();
 										
 										
@@ -115,13 +141,35 @@ public class MainFrame {
 									} catch (Exception E) {
 									}
 								}
+								//开始监听
+								MListenT=new Thread(
+										new Runnable(){
+											public void run(){
+												try {
+													while(State){
+														Socket Client=MListener.accept();
+														try{
+															DataInputStream in=new DataInputStream(Client.getInputStream());
+															new ChatFrame(Client,in.readUTF(),false);
+														}catch(Exception e2){
+															
+														}
+													}													
+												}catch(Exception e2){
+												}
+											}
+										}
+										);
+								MListenT.start();
 																														
 							}else{//如果要下线
 								try{
 									Dt.State=false;//关掉发现线程
 //									Bt_On.State=false;
-									Bt_Off=new BrocastThread(Listener,NameT.getText(),false);
+									Bt_Off=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
 									Bt_Off.start();
+									
+									MListener.close();
 									
 									CstateB.setText("上线");
 									NameT.setEditable(true);
@@ -136,6 +184,24 @@ public class MainFrame {
 					}
 				}
 				);
+		
+		UserL.addMouseListener(new MouseAdapter(){  
+		    public void mouseClicked(MouseEvent e){  
+		        if(e.getClickCount()==2){   //When double click JList  
+		        	String temp[]=UserL.getSelectedValue().toString().split("  ");
+		        	try {
+						Socket Client=new Socket(temp[1],Integer.parseInt(temp[2]));
+						try {
+							DataOutputStream out=new DataOutputStream(Client.getOutputStream());
+							out.writeUTF(NameT.getText());
+						}catch(Exception H){
+						}
+						new ChatFrame(Client,temp[0],true);
+					} catch (Exception e1) {
+					} 
+		        }  
+		    }  
+		});  
 	}
 	
 	public static void main(String args[]){
