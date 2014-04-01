@@ -115,10 +115,10 @@ public class MainFrame {
 									} catch (Exception e0) {
 									}
 								}
-								for(int j=6000;j<6010;j++){
+								for(int j=6000;j<6100;j++){
 									try{
 										MListener=new ServerSocket(j);
-										//添加接收代码
+										
 										break;
 									}catch(Exception E){
 										

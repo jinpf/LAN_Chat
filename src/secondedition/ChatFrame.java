@@ -5,11 +5,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -42,6 +46,7 @@ public class ChatFrame {
 		Listener=socket;
 		Name=name;
 		Visible=visible;
+//		System.out.println(Listener.getInetAddress().getHostAddress());
 		
 		Cframe=new JFrame(Name);
 		Font fnt = new Font("微软雅黑",Font.PLAIN +Font.BOLD,12);
@@ -76,16 +81,55 @@ public class ChatFrame {
 		
 		ListenT=new Thread(
 				new Runnable(){
+					
 					public void run(){
 						try {
 							DataInputStream in=new DataInputStream(Listener.getInputStream());
+							DataOutputStream out=new DataOutputStream(Listener.getOutputStream());
 							while(true){
 								String str;
 								try {
 									str = in.readUTF();
 									if(!Cframe.isVisible())
 										Cframe.setVisible(true);
-									ShowT.append(Name+":"+str+"\n");
+									String temp[]=str.split("   ");
+									
+									if(temp[0].equals("FileName:")){//如果传输文件
+										
+										SendMB.setEnabled(false);//防止因发送信息而导致出错
+										
+										int n = JOptionPane.showConfirmDialog(null, "是否接收"+Name+"传输的："+temp[1], "选择", JOptionPane.YES_NO_OPTION);
+										if(n==0){	//如果接收文件
+											for(int i=9000;i<9100;i++){
+												try{
+													ServerSocket FListener=new ServerSocket(i);
+													//添加接收代码
+													
+													out.writeUTF("SendFile:   "+i);
+													break;
+												}catch(Exception E){	
+												}
+											}
+											ShowT.append("选择接收"+temp[1]+"\n");
+										}else{	//如果拒绝接收文件
+											out.writeUTF("SendFile:   "+(-1));
+											ShowT.append("拒绝接收"+temp[1]+"\n");
+										}
+										
+										SendMB.setEnabled(true);//防止因发送信息而导致出错
+										
+									}else if(temp[0].equals("SendFile:")){	//接收对方传文件的选择
+										int FC=Integer.parseInt(temp[1]);//选择是否接收文件
+										if(FC==-1){
+											ShowT.append("对方拒绝接收\n");
+										}else{
+											ShowT.append("对方接收地址"+Listener.getInetAddress().getHostAddress()+":"+FC+"\n");
+										}
+
+									}else{
+										ShowT.append(Name+":"+str+"\n");
+									}
+										
 								} catch (IOException e) {
 									if(e.getMessage()==null){
 										ShowT.append("对方断开连接\n");
@@ -126,6 +170,44 @@ public class ChatFrame {
 							ShowT.selectAll();
 							ShowT.setCaretPosition(ShowT.getSelectedText().length());
 							ShowT.requestFocus();
+						}
+					}
+				}
+				);
+		
+		SendFB.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						if(e.getSource()==SendFB){
+							SendMB.setEnabled(false);
+							
+							File SendF=null;	//要发送的文件
+							int result=0;	//文件选择结果
+							JFileChooser fileChooser = new JFileChooser() ;
+							fileChooser.setApproveButtonText("发送");
+							fileChooser.setDialogTitle("请选择要发送的文件");
+							result = fileChooser.showOpenDialog(Cframe);
+							if(result==JFileChooser.APPROVE_OPTION){
+								SendF=fileChooser.getSelectedFile();
+								
+								try {
+									
+									DataOutputStream out=new DataOutputStream(Listener.getOutputStream());
+									DataInputStream in=new DataInputStream(Listener.getInputStream());
+									out.writeUTF("FileName:   "+SendF.getName());
+									ShowT.append("准备发送文件: "+SendF.getName()+" 等待对方接收\n");
+									
+								} catch (IOException e1) {
+									ShowT.append("发送失败\n");
+								}
+								
+								//get InfoT to auto show the last line
+								ShowT.selectAll();
+								ShowT.setCaretPosition(ShowT.getSelectedText().length());
+								ShowT.requestFocus();
+								
+							}
+							SendMB.setEnabled(true);
 						}
 					}
 				}
