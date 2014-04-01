@@ -33,6 +33,7 @@ public class ChatFrame {
 	private Socket Listener=null;
 	private String Name=null;
 	private Boolean Visible;
+	//该线程接收和判断所有收到的信息
 	private Thread ListenT;
 	/**
 	 * 构造聊天视图
@@ -46,7 +47,6 @@ public class ChatFrame {
 		Listener=socket;
 		Name=name;
 		Visible=visible;
-//		System.out.println(Listener.getInetAddress().getHostAddress());
 		
 		Cframe=new JFrame(Name);
 		Font fnt = new Font("微软雅黑",Font.PLAIN +Font.BOLD,12);
@@ -77,7 +77,7 @@ public class ChatFrame {
 		Cframe.setSize(360, 350);
 		Cframe.setLocationRelativeTo(null);//在屏幕中央
 		Cframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//点击关闭按钮隐藏并释放窗体
-		Cframe.setVisible(visible);
+		Cframe.setVisible(Visible);
 		
 		ListenT=new Thread(
 				new Runnable(){
@@ -94,23 +94,39 @@ public class ChatFrame {
 										Cframe.setVisible(true);
 									String temp[]=str.split("   ");
 									
-									if(temp[0].equals("FileName:")){//如果传输文件
+									if(temp[0].equals("FileName:")){	//如果对方要传输文件
 										
 										SendMB.setEnabled(false);//防止因发送信息而导致出错
 										
 										int n = JOptionPane.showConfirmDialog(null, "是否接收"+Name+"传输的："+temp[1], "选择", JOptionPane.YES_NO_OPTION);
 										if(n==0){	//如果接收文件
-											for(int i=9000;i<9100;i++){
-												try{
-													ServerSocket FListener=new ServerSocket(i);
-													//添加接收代码
-													
-													out.writeUTF("SendFile:   "+i);
-													break;
-												}catch(Exception E){	
+											File ReceiveF=null;
+											JFileChooser fileChooser = new JFileChooser() ;
+											fileChooser.setApproveButtonText("保存");
+											fileChooser.setDialogTitle("请选择要保存的位置");
+											fileChooser.setSelectedFile(new File(temp[1]));
+											int result = fileChooser.showSaveDialog(Cframe);
+											if(result==JFileChooser.APPROVE_OPTION){
+												ReceiveF=fileChooser.getSelectedFile();
+												for(int i=9000;i<9100;i++){
+													try{
+														ServerSocket FListener=new ServerSocket(i);
+														//添加接收代码
+														
+														
+														out.writeUTF("SendFile:   "+i);
+														ShowT.append("选择接收"+temp[1]+"存放在: "+ReceiveF.getPath()+"\n");
+														break;
+													}catch(Exception E){	
+													}
 												}
+											}else{
+												JOptionPane.showMessageDialog(Cframe.getContentPane(),
+													       "放弃接收该文件！", "注意！", JOptionPane.WARNING_MESSAGE);
+												out.writeUTF("SendFile:   "+(-1));
+												ShowT.append("拒绝接收"+temp[1]+"\n");
 											}
-											ShowT.append("选择接收"+temp[1]+"\n");
+											
 										}else{	//如果拒绝接收文件
 											out.writeUTF("SendFile:   "+(-1));
 											ShowT.append("拒绝接收"+temp[1]+"\n");
@@ -118,7 +134,8 @@ public class ChatFrame {
 										
 										SendMB.setEnabled(true);//防止因发送信息而导致出错
 										
-									}else if(temp[0].equals("SendFile:")){	//接收对方传文件的选择
+										
+									}else if(temp[0].equals("SendFile:")){	//接收对方对自己传文件的选择
 										int FC=Integer.parseInt(temp[1]);//选择是否接收文件
 										if(FC==-1){
 											ShowT.append("对方拒绝接收\n");
@@ -126,7 +143,8 @@ public class ChatFrame {
 											ShowT.append("对方接收地址"+Listener.getInetAddress().getHostAddress()+":"+FC+"\n");
 										}
 
-									}else{
+										
+									}else{	//正常发送信息
 										ShowT.append(Name+":"+str+"\n");
 									}
 										
@@ -175,6 +193,7 @@ public class ChatFrame {
 				}
 				);
 		
+		//注意！！！该按钮只是告诉对方自己要发文件，但真正是否要发送文件还需要ListenT线程进行判断
 		SendFB.addActionListener(
 				new ActionListener(){
 					public void actionPerformed(ActionEvent e) {
