@@ -86,7 +86,7 @@ public class ChatFrame {
 						try {
 							DataInputStream in=new DataInputStream(Listener.getInputStream());
 							DataOutputStream out=new DataOutputStream(Listener.getOutputStream());
-							while(true){
+							while(MainFrame.State){	//如果在线就一直监听
 								String str;
 								try {
 									str = in.readUTF();
@@ -163,6 +163,7 @@ public class ChatFrame {
 								ShowT.setCaretPosition(ShowT.getSelectedText().length());
 								ShowT.requestFocus();
 							}
+							Listener.close();
 						}catch(Exception e){
 							
 						}
@@ -182,6 +183,9 @@ public class ChatFrame {
 								SendT.setText("");
 							} catch (IOException e1) {
 								ShowT.append("发送失败\n");
+								if(!MainFrame.State){
+									ShowT.append("已下线！");
+								}
 							}
 							
 							//get InfoT to auto show the last line
@@ -218,6 +222,9 @@ public class ChatFrame {
 									
 								} catch (IOException e1) {
 									ShowT.append("发送失败\n");
+									if(!MainFrame.State){
+										ShowT.append("已下线！");
+									}
 								}
 								
 								//get InfoT to auto show the last line

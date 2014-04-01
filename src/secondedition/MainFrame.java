@@ -44,7 +44,7 @@ public class MainFrame {
 	private ServerSocket MListener;
 	private Thread MListenT;
 	
-	private Boolean State=false; //true代表当前在线，false代表当前不在线
+	public static Boolean State=false; //true代表当前在线，false代表当前不在线
 	
 	public MainFrame() {
 		Font fnt = new Font("微软雅黑",Font.PLAIN +Font.BOLD,12);
