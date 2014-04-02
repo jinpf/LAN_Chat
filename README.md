@@ -1,6 +1,6 @@
 ##LAN_Chat
 
-GUI LAN Chat software written in Java
+GUI LAN Chat software written in Java, because it`s written with Java, so it can run on any platforms which support JVM.
 
 ###First Edition
 
