@@ -35,6 +35,7 @@ public class ChatFrame {
 	private Boolean Visible;
 	//该线程接收和判断所有收到的信息
 	private Thread ListenT;
+	private File SendF=null;	//要发送的文件
 	/**
 	 * 构造聊天视图
 	 * @param socket
@@ -112,7 +113,8 @@ public class ChatFrame {
 													try{
 														ServerSocket FListener=new ServerSocket(i);
 														//添加接收代码
-														
+														FileReceiveThread FRT=new FileReceiveThread(ReceiveF,FListener);
+														FRT.start();
 														
 														out.writeUTF("SendFile:   "+i);
 														ShowT.append("选择接收"+temp[1]+"存放在: "+ReceiveF.getPath()+"\n");
@@ -136,11 +138,14 @@ public class ChatFrame {
 										
 										
 									}else if(temp[0].equals("SendFile:")){	//接收对方对自己传文件的选择
-										int FC=Integer.parseInt(temp[1]);//选择是否接收文件
-										if(FC==-1){
+										int PT=Integer.parseInt(temp[1]);//选择是否接收文件
+										if(PT==-1){
 											ShowT.append("对方拒绝接收\n");
 										}else{
-											ShowT.append("对方接收地址"+Listener.getInetAddress().getHostAddress()+":"+FC+"\n");
+											ShowT.append("对方接收地址"+Listener.getInetAddress().getHostAddress()+":"+PT+"\n");
+											Socket SendS=new Socket(Listener.getInetAddress().getHostAddress(),PT);
+											FileTransferThread FTT=new FileTransferThread(SendF,SendS);
+											FTT.start();
 										}
 
 										
@@ -204,7 +209,6 @@ public class ChatFrame {
 						if(e.getSource()==SendFB){
 							SendMB.setEnabled(false);
 							
-							File SendF=null;	//要发送的文件
 							int result=0;	//文件选择结果
 							JFileChooser fileChooser = new JFileChooser() ;
 							fileChooser.setApproveButtonText("发送");
