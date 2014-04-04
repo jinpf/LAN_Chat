@@ -18,7 +18,7 @@ In this edition ,you can communicate with others use this simple but ugly tool..
 ###Second Edition
 
 In `src/secondedition` ,thers\`s the second edition.
-In this edition ,you can commuicate and share files with others in the same LAN .This edition is better than ever ,it\`s pretty friendly to human ,you don\`t need to get the f**king IP and Port ,software itself can help you discover who is online .You just need to write down you name and then click the "上线" button to go online ,then find one on the online list ,double click ,and then begin you talk .When transfer files you will find how friendly it is!
+In this edition ,you can commuicate and share files with others in the same LAN .This edition is better than ever ,it\`s pretty friendly ,you don\`t need to get the f**king IP and Port ,software itself can help you discover who is online .You just need to write down you name and then click the "上线" button to go online ,then find one on the online list ,double click ,and then begin your talk .When transfer files you will find how friendly it is!
 
 **Pretty easy to use ,but difficult to write...**
 
