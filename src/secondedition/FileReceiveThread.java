@@ -18,6 +18,14 @@ public class FileReceiveThread extends Thread {
 	private File ReceiveF;
 	private ServerSocket ListenS;
 	private JProgressBar progressBar=null;
+	/**
+	 * file receive thread
+	 * @param f
+	 * f stands for the file you plan to receive,
+	 * you must already choose where to put this file and open it.
+	 * @param S
+	 * Server socket you going to listen.
+	 */
 	public FileReceiveThread(File f,ServerSocket S) {
 		ReceiveF=f;
 		ListenS=S;

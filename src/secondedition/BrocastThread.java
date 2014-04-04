@@ -30,17 +30,25 @@ public class BrocastThread extends Thread{
 	public void run(){
 		DatagramPacket BroadCast=null;
 		if(State){//上线
-			for (int i=3000;i<3005;i++){
+			while(State){
 				try {
-					String SendS="h"+"  "+Name+"  "+Port;
-					BroadCast = new DatagramPacket(SendS.getBytes("UTF-8"),SendS.length(),InetAddress.getByName("255.255.255.255"),i) ;
-					for(int k=0;k<3;k++){
-						Listener.send(BroadCast);
-						Thread.sleep(50);
+					for (int i=3000;i<3005;i++){
+						try {
+							String SendS="h"+"  "+Name+"  "+Port;
+							BroadCast = new DatagramPacket(SendS.getBytes("UTF-8"),SendS.length(),InetAddress.getByName("255.255.255.255"),i) ;
+							for(int k=0;k<3;k++){
+								Listener.send(BroadCast);
+								Thread.sleep(50);
+							}
+							Listener.send(BroadCast);
+						} catch (Exception e) {
+							System.out.println(e.getMessage());
+						}
 					}
-					Listener.send(BroadCast);
+					
+					Thread.sleep(60000);	//定期一分钟广播一次
+//					System.out.println("定期广播");
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
 				}
 			}
 		}else{//下线

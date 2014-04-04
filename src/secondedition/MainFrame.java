@@ -165,7 +165,7 @@ public class MainFrame {
 							}else{//如果要下线
 								try{
 									Dt.State=false;//关掉发现线程
-//									Bt_On.State=false;
+									Bt_On.State=false;//关掉广播在线线程
 									Bt_Off=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
 									Bt_Off.start();
 									

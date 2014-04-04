@@ -10,12 +10,25 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
+/**
+ * File transfer thread
+ * @author jinpf
+ *
+ */
 public class FileTransferThread extends Thread{
 	private JFrame Cframe=null;
 	private Socket SendS;
 	private File SendF;
 	private JProgressBar progressBar=null;
-	
+	/**
+	 * file transfer thread
+	 * @param f
+	 * f stands for file you want to transfer
+	 * @param s
+	 * s stands for socket you want to use to transfer the file
+	 * in this socket,you must have bind IP and Port which it going
+	 * to connect.
+	 */
 	public FileTransferThread(File f,Socket s) {
 		SendF=f;
 		SendS=s;
