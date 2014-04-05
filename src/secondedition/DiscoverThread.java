@@ -21,9 +21,11 @@ public class DiscoverThread extends Thread{
 	/**
 	 * 监听发现在线用户
 	 * @param UDPsocket
-	 * 监听UDP套接字
+	 * 扫描监听UDP套接字
 	 * @param name
 	 * 用户昵称
+	 * @param port
+	 * 通信套接字监听接口
 	 */
 	public DiscoverThread(DatagramSocket UDPsocket,String name,int port) {
 		Listener=UDPsocket;

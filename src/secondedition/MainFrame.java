@@ -38,8 +38,8 @@ public class MainFrame {
 	private JScrollPane UserScr=null;
 	
 	private DiscoverThread Dt;//discover thread
-	private BrocastThread Bt_On;
-	private BrocastThread Bt_Off;
+	private BroadcastThread Bt_On;
+	private BroadcastThread Bt_Off;
 	private DatagramSocket Listener;
 	private ServerSocket MListener;
 	private Thread MListenT;
@@ -85,7 +85,7 @@ public class MainFrame {
 					public void windowClosing(WindowEvent e){
 						Mframe.setVisible(false);
 						if(Listener!=null&&!Listener.isClosed()){//通知别人自己下线
-							Bt_Off=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
+							Bt_Off=new BroadcastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
 							Bt_Off.start();
 							while(!Bt_Off.State);
 						}
@@ -130,7 +130,7 @@ public class MainFrame {
 										Listener=new DatagramSocket(i);
 										Dt=new DiscoverThread(Listener,NameT.getText(),MListener.getLocalPort());
 										Dt.start();
-										Bt_On=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),true);
+										Bt_On=new BroadcastThread(Listener,NameT.getText(),MListener.getLocalPort(),true);
 										Bt_On.start();
 										
 										
@@ -166,7 +166,7 @@ public class MainFrame {
 								try{
 									Dt.State=false;//关掉发现线程
 									Bt_On.State=false;//关掉广播在线线程
-									Bt_Off=new BrocastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
+									Bt_Off=new BroadcastThread(Listener,NameT.getText(),MListener.getLocalPort(),false);
 									Bt_Off.start();
 									
 									MListener.close();

@@ -4,7 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class BrocastThread extends Thread{
+public class BroadcastThread extends Thread{
 	
 	private DatagramSocket Listener;
 	private String Name;
@@ -14,13 +14,15 @@ public class BrocastThread extends Thread{
 	/**
 	 * 进行定期广播来帮助发现用户
 	 * @param UDPsocket
-	 * 监听套接字
+	 * 扫描监听套接字
 	 * @param name
 	 * 用户昵称
+	 * @param port
+	 * 通信监听套接字
 	 * @param flag
 	 * 是广播上线还是广播下线，true代表上线，false代表下线
 	 */
-	public BrocastThread(DatagramSocket UDPsocket,String name,int port,Boolean flag) {
+	public BroadcastThread(DatagramSocket UDPsocket,String name,int port,Boolean flag) {
 		Listener=UDPsocket;
 		Name=name;
 		Port=port;
