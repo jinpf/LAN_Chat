@@ -4,7 +4,7 @@ GUI LAN Chat software written in Java, because it`s written with Java, it can ru
 
 ###First Edition
 
-Source code in `src/firstediton` . You can communicate with others use this simple but ugly tool... First you must listen to a port by click the "监听" button, when someone wants to connect with you, you just need to reply messages with clicking "回复" button  to reply messages. Also, you can fill in the text with IP and Port that someone else is listening, then click "连接" to connect with them. Thus, you can text them messages with clicking "发送" to send it out.
+Source code in `src/firstediton` . You can communicate with others by useing this simple but ugly tool... First you must listen to a port by clicking the "监听" button, when someone wants to connect with you, you just need to reply messages with clicking "回复" button  to reply messages. Also, you can fill in the text with IP and Port that someone else is listening, then click "连接" to connect with them. Thus, you can text them messages with clicking "发送" to send it out.
 
 **In fact it can be splited into one server and one client** , but I am  lazzy to write the GUI, so i find a way to put it together, but to be honst, it\`s really ugly. SO, I got to decide to write a better one! That makes for the next edition.
 
